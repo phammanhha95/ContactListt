@@ -14,4 +14,5 @@ struct Contact {
     var phone: String
     var note: String
     var group: GroupType
+    var id: String
 }

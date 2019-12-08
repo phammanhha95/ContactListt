@@ -16,7 +16,8 @@ class CustomViewCell: UITableViewCell {
         super.awakeFromNib()
     avatarImageView.layer.cornerRadius = 25
         avatarImageView.contentMode = .scaleAspectFill
-    nameLabel.textColor = UIColor.white
+        avatarImageView.layer.borderWidth = 0.5
+        avatarImageView.layer.borderColor = UIColor(red:0.38, green:0.38, blue:0.38, alpha:1.0).cgColor
         nameLabel.font = UIFont.boldSystemFont(ofSize: 20)
     }
 

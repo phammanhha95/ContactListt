@@ -19,20 +19,19 @@ class MainViewController: UIViewController, UISearchBarDelegate {
     @IBOutlet weak var searchBar: UISearchBar!
     var contacts = [Contact]()
     var currentcontacts = [Contact]()
-    
+//    var currentcontacts = loadFriends() ?? []
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(red:0.04, green:0.04, blue:0.04, alpha:1.0)
-      // searchBar.backgroundColor = UIColor(red:0.38, green:0.38, blue:0.38, alpha:1.0)
-        searchBar.barTintColor = UIColor(red:0.04, green:0.04, blue:0.04, alpha:1.0)
-        
-        navigationController?.navigationBar.barTintColor = .black
+        view.backgroundColor = UIColor.white
+        // searchBar.backgroundColor = UIColor(red:0.38, green:0.38, blue:0.38, alpha:1.0)
+    //searchBar.barTintColor = UIColor(red:0.04, green:0.04, blue:0.04, alpha:1.0)
+//        navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.prefersLargeTitles = true
         title = "ContactList"
-        navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor : UIColor.white]
+//        navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor : UIColor.white]
        // navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.barStyle = .black
+//        navigationController?.navigationBar.barStyle = .black
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newData))
         setuptableView()
         createData()
@@ -56,6 +55,7 @@ class MainViewController: UIViewController, UISearchBarDelegate {
             
         }
         // chuyển sang màn 2
+       
         navigationController?.pushViewController(createVC, animated: true)
         
     }
@@ -63,26 +63,42 @@ class MainViewController: UIViewController, UISearchBarDelegate {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UINib(nibName: "CustomViewCell", bundle: nil), forCellReuseIdentifier: "cell")
-        let viewbackground = UIView()
-        viewbackground.backgroundColor = UIColor(red:0.04, green:0.04, blue:0.04, alpha:1.0)
-        tableView.tableFooterView = viewbackground
-        tableView.backgroundColor = UIColor(red:0.04, green:0.04, blue:0.04, alpha:1.0)
+        
+
+        
     }
     func createData(){
         contacts = [
-            Contact(photo: UIImage(named: "spiderman"), name: "Spiderman", phone: "0988321135", note: "Nhện nhọ", group: .another),
-            Contact(photo: UIImage(named: "hulk"), name: "Hulk", phone: "098620465", note: "Khổng Lồ Xanh", group: .friend),
-            Contact(photo: UIImage(named: "batman"), name: "Batman", phone: "0364329856", note: "Phantom", group: .family),
-            Contact(photo: UIImage(named: "ironman"), name: "Ironman", phone: "0364329856", note: "3000", group: .family),
-            Contact(photo: UIImage(named: "harleyquinn"), name: "Harley Quinn", phone: "0364329859", note: "mcu", group: .friend),
-            Contact(photo: UIImage(named: "wonderwoman"), name: "Wonder Woman", phone: "0364329851", note: "<><><> ", group: .another),
+            Contact(photo: UIImage(named: "spiderman"), name: "Spiderman", phone: "0988321135", note: "Nhện nhọ", group: .another, id: "5"),
+            Contact(photo: UIImage(named: "hulk"), name: "Hulk", phone: "098620465", note: "Khổng Lồ Xanh", group: .friend, id: "4"),
+            Contact(photo: UIImage(named: "batman"), name: "Batman", phone: "0364329856", note: "Phantom", group: .family, id: "3"),
+            Contact(photo: UIImage(named: "ironman"), name: "Ironman", phone: "0364329856", note: "3000", group: .family, id:
+                "2"),
+            Contact(photo: UIImage(named: "harleyquinn"), name: "Harley Quinn", phone: "0364329859", note: "dc", group: .friend, id: "1"),
+            Contact(photo: UIImage(named: "wonderwoman"), name: "Wonder Woman", phone: "0364329851", note: "<><><> ", group: .another, id: "0"),
             
         ]
         currentcontacts = contacts
+        
     }
 
-        
+//        private func saveFriends() {
+//            /*let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(friends, toFile: Friend.ArchiveURL.path)
+//            if isSuccessfulSave {
+//                print("Saving friends success")
+//            } else {
+//                print("Saving friends failed")
+//            }*/
+//            do {
+//                let data = try NSKeyedArchiver.archivedData(withRootObject: contacts, requiringSecureCoding: false)
+//                try data.write(to: URL(fileURLWithPath: Friend.ArchiveURL.path))
+//            } catch {
+//                print("Couldn't write file")
+//            }
+//        }
 
+        
+// search bar
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         currentcontacts = contacts.filter({ contact -> Bool in
             switch searchBar.selectedScopeButtonIndex {
@@ -129,6 +145,7 @@ class MainViewController: UIViewController, UISearchBarDelegate {
         tableView.reloadData()
     }
     
+    
 }
 
 
@@ -139,7 +156,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomViewCell
-        cell.backgroundColor = UIColor(red:0.04, green:0.04, blue:0.04, alpha:1.0)
+        cell.backgroundColor = .groupTableViewBackground
         cell.selectionStyle = .none
         cell.avatarImageView.image = currentcontacts[indexPath.row].photo
         cell.nameLabel.text = currentcontacts[indexPath.row].name
@@ -149,14 +166,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return 70
     }
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let viewFooter = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 40))
+        let viewFooter = UIView(frame: CGRect(x: 0, y: 50, width: tableView.bounds.width, height: 40))
         let countLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 30))
         countLabel.center = viewFooter.center
         countLabel.text = "\(currentcontacts.count) liên hệ "
-        countLabel.textColor = .white
-        countLabel.font = UIFont.boldSystemFont(ofSize: 15)
+        countLabel.textColor = UIColor(red:0.38, green:0.38, blue:0.38, alpha:1.0)
+        countLabel.font = UIFont.boldSystemFont(ofSize: 19)
         viewFooter.addSubview(countLabel)
-        viewFooter.backgroundColor = UIColor(red:0.38, green:0.38, blue:0.38, alpha:1.0)
+      // viewFooter.backgroundColor = UIColor(red:0.38, green:0.38, blue:0.38, alpha:1.0)
         return viewFooter
     }
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -168,12 +185,19 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         // khởi tạo nút delete kiểu UITableViewRowAction
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
             print("delete")
-          
-            self.contacts.remove(at: indexPath.row)
-            self.currentcontacts.remove(at: indexPath.row)
             
-            //self.contacts = self.contacts.remove(at: currentcontacts[indexPath.row])
-           
+            let id = self.currentcontacts[indexPath.row].id
+            for (index,i) in self.currentcontacts.enumerated(){
+                if i.id == id {
+                    self.currentcontacts.remove(at: index)
+                }
+            }
+            for (index,i) in self.contacts.enumerated(){
+                if i.id == id {
+                    self.contacts.remove(at: index)
+                }
+            }
+            tableView.deleteRows(at: [indexPath], with: .middle)
             self.tableView.reloadData()
         }
         
